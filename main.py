@@ -48,6 +48,18 @@ def automate_function(
     # The context provides a convenient way to receive the triggering version.
     version_root_object = automate_context.receive_version()
 
+    windows_objects = [
+        b
+        for b in flatten_base(version_root_object)
+        if getattr(b, "category", None) == "Windows"
+    ]
+    if windows_objects:
+        automate_context.attach_error_to_objects(
+            category="Windows",
+            affected_objects=windows_objects,
+            message="Objects with category 'Windows' found.",
+        )
+
     objects_with_forbidden_speckle_type = [
         b
         for b in flatten_base(version_root_object)
