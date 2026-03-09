@@ -59,6 +59,8 @@ def automate_function(
             affected_objects=windows_objects,
             message="Objects with category 'Windows' found.",
         )
+        for obj in windows_objects:
+            obj.TestProperty = "TestValue" + str(getattr(obj, "name", "") or "")
 
     objects_with_forbidden_speckle_type = [
         b
