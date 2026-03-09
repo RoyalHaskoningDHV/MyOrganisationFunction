@@ -51,11 +51,11 @@ def automate_function(
     windows_objects = [
         b
         for b in flatten_base(version_root_object)
-        if getattr(b, "category", None) == "Windows"
+        if getattr(b, "category", None) == function_inputs.forbidden_speckle_type
     ]
     if windows_objects:
         automate_context.attach_error_to_objects(
-            category="Windows",
+            category=function_inputs.forbidden_speckle_type,
             affected_objects=windows_objects,
             message="Objects with category 'Windows' found.",
         )
@@ -69,13 +69,13 @@ def automate_function(
                 metadata={"TestProperty": test_value}
             )
             
-        gradient_values = ["TestValue" + str(getattr(obj, "name", "") or "") for obj in windows_objects]
-        automate_context.attach_info_to_objects(
-            category="Gradient Visualization",
-            affected_objects=windows_objects,
-            message="Values applied to objects in list order",
-            metadata={"gradient": True, "gradientValues": gradient_values}
-        )
+        # gradient_values = ["TestValue" + str(getattr(obj, "name", "") or "") for obj in windows_objects]
+        # automate_context.attach_info_to_objects(
+        #     category="Gradient Visualization",
+        #     affected_objects=windows_objects,
+        #     message="Values applied to objects in list order",
+        #     metadata={"gradient": True, "gradientValues": gradient_values}
+        # )
 
     objects_with_forbidden_speckle_type = [
         b
