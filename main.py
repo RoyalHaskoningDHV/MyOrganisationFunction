@@ -59,8 +59,23 @@ def automate_function(
             affected_objects=windows_objects,
             message="Objects with category 'Windows' found.",
         )
-        for obj in windows_objects:
-            obj.TestProperty = "TestValue" + str(getattr(obj, "name", "") or "")
+        for i, obj in enumerate(windows_objects):
+            test_value = "TestValue" + str(getattr(obj, "name", "") or "")
+            obj.TestProperty = test_value
+            automate_context.attach_info_to_objects(
+                category="Window Metadata",
+                affected_objects=[obj],
+                message="Test property metadata",
+                metadata={"TestProperty": test_value}
+            )
+            
+        gradient_values = ["TestValue" + str(getattr(obj, "name", "") or "") for obj in windows_objects]
+        automate_context.attach_info_to_objects(
+            category="Gradient Visualization",
+            affected_objects=windows_objects,
+            message="Values applied to objects in list order",
+            metadata={"gradient": True, "gradientValues": gradient_values}
+        )
 
     objects_with_forbidden_speckle_type = [
         b
