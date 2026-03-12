@@ -25,6 +25,7 @@ def test_function_run(
         FunctionInputs(
             forbidden_speckle_type="None",
             whisper_message=SecretStr("testing automatically"),
+            text_input="integration test",
         ),
     )
 
