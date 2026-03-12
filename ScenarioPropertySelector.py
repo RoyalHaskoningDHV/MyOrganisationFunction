@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+from decimal import ROUND_HALF_UP, Decimal
 from typing import Any
 
 from GetModelInfo import summarize_model_properties
-from InfoData import COST_ROW_DEFINITIONS, COST_TABLE
+from InfoData import COST_ROW_DEFINITIONS, COST_TABLE, STAARTKOSTEN
 
 
 def _safe_float(value: Any) -> float | None:
@@ -33,13 +34,21 @@ def _safe_float(value: Any) -> float | None:
 
 def _extract_selected_index(value: Any) -> int | None:
     """Extract a scenario option index from values like `2:Houtbouw`."""
-    if isinstance(value, str) and ":" in value:
+    if isinstance(value, str):
+        cleaned = value.strip()
+        if not cleaned:
+            return None
+        if ":" in cleaned:
+            cleaned = cleaned.split(":", maxsplit=1)[0].strip()
         try:
-            return int(value.split(":", maxsplit=1)[0].strip())
+            parsed_value = float(cleaned.replace(",", "."))
         except ValueError:
             return None
+        return int(parsed_value) if parsed_value.is_integer() else None
     if isinstance(value, int):
         return value
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
     return None
 
 
@@ -141,6 +150,36 @@ def _resolve_quantity(row: dict[str, Any], quantities: dict[str, float]) -> tupl
     return None, None
 
 
+def _round_currency(value: float) -> float:
+    """Round currency values with the conventional half-up strategy."""
+    return float(Decimal(str(value)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
+
+
+def calculate_staartkosten(base_total: float) -> tuple[list[dict[str, Any]], float, float]:
+    """Apply staartkosten percentages cumulatively to a base amount."""
+    running_total = _round_currency(base_total)
+    steps = []
+
+    for label, description, percentage_text in STAARTKOSTEN:
+        percentage = _safe_float(percentage_text) or 0.0
+        applied_amount = _round_currency(running_total * (percentage / 100.0))
+        new_total = _round_currency(running_total + applied_amount)
+        steps.append(
+            {
+                "label": label,
+                "description": description,
+                "percentage": percentage,
+                "input_total": running_total,
+                "applied_amount": applied_amount,
+                "output_total": new_total,
+            }
+        )
+        running_total = new_total
+
+    staartkosten_total = _round_currency(running_total - _round_currency(base_total))
+    return steps, staartkosten_total, running_total
+
+
 def build_cost_breakdown(
     all_objects,
     property_totals: dict[str, float],
@@ -154,6 +193,8 @@ def build_cost_breakdown(
         quantity, quantity_source = _resolve_quantity(row_definition, quantities)
         scenario_property = row_definition.get("scenario_property")
         selected_index = _extract_selected_index(scenario_properties.get(scenario_property)) if scenario_property else None
+        if selected_index is None:
+            selected_index = row_definition.get("default_selected_index")
         active_selected_indices = row_definition.get("active_selected_indices")
 
         if active_selected_indices is not None and selected_index not in active_selected_indices:
@@ -188,19 +229,27 @@ def build_cost_breakdown(
             }
         )
 
+    known_cost_total = round(sum(row["total"] for row in rows if row["total"] is not None), 2)
+    _, staartkosten_total, total_including_staartkosten = calculate_staartkosten(known_cost_total)
+
     summary = {
         "total_bvo": round(_safe_float(quantities.get("ObjectBvo")) or 0.0, 2),
         "total_gbo": round(_safe_float(quantities.get("ObjectGbo")) or 0.0, 2),
         "total_bbo": round(_safe_float(quantities.get("ObjectBbo")) or 0.0, 2),
         "apartment_count": round(_safe_float(quantities.get("AantalAppartementen")) or 0.0, 2),
         "building_layers": round(_safe_float(quantities.get("AantalBouwlagen")) or 0.0, 2),
-        "known_cost_total": round(sum(row["total"] for row in rows if row["total"] is not None), 2),
+        "known_cost_total": known_cost_total,
+        "staartkosten_total": staartkosten_total,
+        "total_including_staartkosten": total_including_staartkosten,
     }
     return rows, summary
 
 
 def format_cost_breakdown(rows: list[dict[str, Any]], summary: dict[str, float]) -> str:
     """Render the cost breakdown into a concise readable text block."""
+    staartkosten_steps, staartkosten_total, total_including_staartkosten = calculate_staartkosten(
+        summary["known_cost_total"]
+    )
     lines = [
         f"Total ObjectBvo: {summary['total_bvo']}",
         f"Total ObjectGbo: {summary['total_gbo']}",
@@ -227,7 +276,26 @@ def format_cost_breakdown(rows: list[dict[str, Any]], summary: dict[str, float])
         )
     lines.append("")
     lines.append(f"Totaal bekende directe bouwkosten: {summary['known_cost_total']:.2f}")
+    lines.append("Staartkosten stapsgewijs:")
+    for step in staartkosten_steps:
+        lines.append(
+            f"- {step['label']} ({step['description']}, {step['percentage']:.2f}%): "
+            f"{step['input_total']:.2f} + {step['applied_amount']:.2f} = {step['output_total']:.2f}"
+        )
+    lines.append(f"Totaal staartkosten: {staartkosten_total:.2f}")
+    lines.append(f"Totaal inclusief staartkosten: {total_including_staartkosten:.2f}")
     return "\n".join(lines)
+
+
+def format_cost_summary_message(summary: dict[str, float]) -> str:
+    """Render only the key totals for the main automation message."""
+    return "\n".join(
+        [
+            f"Total ObjectBvo: {summary['total_bvo']:.2f}",
+            f"Totaal bekende directe bouwkosten: {summary['known_cost_total']:.2f}",
+            f"Totaal inclusief staartkosten: {summary['total_including_staartkosten']:.2f}",
+        ]
+    )
 
 
 if __name__ == "__main__":

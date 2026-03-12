@@ -11,7 +11,7 @@ from speckle_automate import (
 
 from flatten import flatten_base
 from GetModelInfo import summarize_model_properties
-from ScenarioPropertySelector import build_cost_breakdown, format_cost_breakdown, get_scenario_costs
+from ScenarioPropertySelector import build_cost_breakdown, format_cost_summary_message, get_scenario_costs
 
 
 class AnalysisType(str, Enum):
@@ -84,7 +84,7 @@ def automate_function(
 
     _, property_totals, scenario_kozijn_value, scenario_properties = summarize_model_properties(all_objects)
     cost_rows, cost_summary = build_cost_breakdown(all_objects, property_totals, scenario_properties)
-    cost_breakdown_text = format_cost_breakdown(cost_rows, cost_summary)
+    cost_breakdown_text = format_cost_summary_message(cost_summary)
 
     automate_context.attach_info_to_objects(
         category="Model Summary",

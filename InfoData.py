@@ -16,7 +16,8 @@ COST_TABLE = {
     "HoeveelhedenVastelinrichting": {0: '26.0', 1: None, 2: None},
     "HoeveelhedenWerktuigbouwkundigeInstallaties": {0: '232.0', 1: '325.2', 2: '395.5'},
     "HoeveelhedenElektrischeInstallaties": {0: '137.0', 1: None, 2: None},
-    "HoeveelhedenNoodrappenhuizen": {0: '9.709', 1: None, 2: None},
+    "HoeveelhedenHoofdtrappenhuis + lift": {0: '21318', 1:'30422' , 2: None},
+    "HoeveelhedenNoodtrappenhuizen": {0: '9.709', 1: '10333', 2: None},
     "HoeveelhedenLiften":           {0: '31.651', 1: None, 2: None},
     "HoeveelhedenBergingen":        {0: '416.0',  1: None,    2: None},
     "HoeveelhedenFietsenstallingen": {0: '348.0', 1: None, 2: None},
@@ -24,7 +25,7 @@ COST_TABLE = {
     "HoeveelhedenGemeenschappelijkRuimte": {0: '45.0', 1: None, 2: None},
     "HoeveelhedenSloop":          {0: '100',    1: None,    2: None},
     "HoeveelhedenBalkon":         {0: '5220',   1: None,    2: None},
-    "HoeveelhedenSceanrioOntsluiting": {0: '56.0', 1: '145', 2: None},
+    "HoeveelhedenScenarioOntsluiting": {0: '56.0', 1: '145', 2: None},
     "HoeveelhedenAppartementenvierkantemeter": {0: '290.0', 1: None, 2: None},
 }
 
@@ -126,7 +127,8 @@ COST_ROW_DEFINITIONS = [
     {
         "label": "Hoofdtrappenhuis + lift",
         "scenario_property": "ScenarioLiften",
-        "cost_key": "HoeveelhedenLiften",
+        "cost_key": "HoeveelhedenHoofdtrappenhuis + lift",
+        "default_selected_index": 0,
         "variant_labels": {
             0: "1 lift",
         },
