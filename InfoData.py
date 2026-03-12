@@ -39,3 +39,180 @@ STAARTKOSTEN = [
 ]
 
 OPPEX = []
+
+COST_ROW_DEFINITIONS = [
+    {
+        "label": "Sloopkosten",
+        "rate": 100.0,
+        "unit": "m2bvo",
+        "quantity_keys": ["HoeveelhedenSloop", "ObjectBvo"],
+    },
+    {
+        "label": "Fundering",
+        "scenario_property": "ScenarioFundering",
+        "cost_key": "HoeveelhedenFundering",
+        "variant_labels": {
+            0: "prefab heipalen",
+            1: "vibro-palen",
+        },
+        "unit": "m2bbo",
+        "quantity_keys": ["HoeveelhedenFundering", "ObjectBbo", "ObjectBvo"],
+    },
+    {
+        "label": "Skelet",
+        "scenario_property": "ScenarioSkelet",
+        "cost_key": "HoeveelhedenSkelet",
+        "variant_labels": {
+            0: "beton",
+            1: "Kalkzandsteen",
+            2: "Hout",
+        },
+        "unit": "m2bvo",
+        "quantity_keys": ["HoeveelhedenSkelet", "ObjectBvo"],
+    },
+    {
+        "label": "Galerijconstructie",
+        "rate": 56.0,
+        "unit": "m2bvo",
+        "quantity_keys": ["HoeveelhedenOntsluiting", "ObjectBvo"],
+    },
+    {
+        "label": "Balkonplaten",
+        "rate": 5220.0,
+        "unit": "won",
+        "quantity_keys": ["HoeveelhedenAantalAppartementen", "AantalWoningen", "AantalAppartementen"],
+    },
+    {
+        "label": "Daken",
+        "scenario_property": "ScenarioDak",
+        "cost_key": "HoeveelhedenDak",
+        "variant_labels": {
+            0: "standaard dak",
+            1: "sedumdak",
+        },
+        "unit": "m2bbo",
+        "quantity_keys": ["HoeveelhedenDak", "ObjectBbo", "ObjectBvo"],
+    },
+    {
+        "label": "Gevel dicht",
+        "rate": 441.9,
+        "unit": "m2",
+        "quantity_keys": ["HoeveelhedenGevel", "ObjectGevelOppervlakte", "GevelOppervlakte", "ObjectBvo"],
+    },
+    {
+        "label": "Gevelopeningen",
+        "scenario_property": "ScenarioGevelOpeningen",
+        "cost_key": "HoeveelhedenGevelOpeningen",
+        "variant_labels": {
+            0: "Kunststof kozijnen HR+++",
+            1: "Aluminium kozijnen HR+++",
+            2: "Houten / Aluminium kozijnen HR+++",
+        },
+        "unit": "m2",
+        "quantity_keys": ["HoeveelhedenGevelOpeningen", "ObjectGevelopeningen", "Gevelopeningen", "ObjectBvo"],
+    },
+    {
+        "label": "Binnenwanden woning",
+        "rate": 81.4,
+        "unit": "m2bvo",
+        "quantity_keys": ["HoeveelhedenBinnenwanden", "ObjectBvo"],
+    },
+    {
+        "label": "Vloeren",
+        "rate": 31.6,
+        "unit": "m2bvo",
+        "quantity_keys": ["HoeveelhedenVloeren", "ObjectBvo"],
+    },
+    {
+        "label": "Hoofdtrappenhuis + lift",
+        "scenario_property": "ScenarioLiften",
+        "cost_key": "HoeveelhedenLiften",
+        "variant_labels": {
+            0: "1 lift",
+        },
+        "unit": "bouwlaag",
+        "quantity_keys": ["HoeveelhedenHoofdtrappenhuizenVerdiepingen", "AantalBouwlagen", "Bouwlagen"],
+    },
+    {
+        "label": "Noodtrappenhuis",
+        "rate": 9709.0,
+        "unit": "bouwlaag",
+        "quantity_keys": ["HoeveelhedenNoodtrappenhuizenVerdiepingen", "AantalBouwlagen", "Bouwlagen"],
+    },
+    {
+        "label": "Plafonds en overige afwerkingen",
+        "rate": 18.0,
+        "unit": "m2bvo",
+        "quantity_keys": ["HoeveelhedenPlafonds", "ObjectBvo"],
+    },
+    {
+        "label": "Diversen",
+        "rate": 22.0,
+        "unit": "m2bvo",
+        "quantity_keys": ["ObjectBvo"],
+    },
+    {
+        "label": "W-installaties",
+        "scenario_property": "ScenarioWerktuigbouwkundigeInstallaties",
+        "cost_key": "HoeveelhedenWerktuigbouwkundigeInstallaties",
+        "variant_labels": {
+            0: "Collectief centrale opwekking",
+            1: "Collectief per woning",
+            2: "individueel",
+        },
+        "unit": "m2bvo",
+        "quantity_keys": ["HoeveelhedenWerktuigbouwkundigeInstallaties", "ObjectBvo"],
+    },
+    {
+        "label": "E-installaties",
+        "rate": 137.0,
+        "unit": "m2bvo",
+        "quantity_keys": ["HoeveelhedenElektrischeInstallaties", "ObjectBvo"],
+    },
+    {
+        "label": "Vaste inrichting",
+        "rate": 26.0,
+        "unit": "m2bvo",
+        "quantity_keys": ["ObjectBvo"],
+    },
+    {
+        "label": "Fietsenberging",
+        "rate": 348.0,
+        "unit": "m2bvo",
+        "quantity_keys": ["HoeveelhedenFietsenstallingen", "ObjectFietsenbergingBvo", "FietsenbergingBvo", "ObjectBvo"],
+    },
+    {
+        "label": "Corridor",
+        "scenario_property": "ScenarioOntsluiting",
+        "rate": 389.0,
+        "unit": "m2bvo",
+        "active_selected_indices": [1],
+        "quantity_keys": ["HoeveelhedenOntsluiting", "ObjectCorridorBvo", "CorridorBvo", "ObjectBvo"],
+    },
+    {
+        "label": "Galerij",
+        "scenario_property": "ScenarioOntsluiting",
+        "rate": 56.0,
+        "unit": "m2bvo",
+        "active_selected_indices": [0],
+        "quantity_keys": ["HoeveelhedenOntsluiting", "ObjectGalerijBvo", "GalerijBvo", "ObjectBvo"],
+    },
+    {
+        "label": "Bergingen",
+        "rate": 416.0,
+        "unit": "m2bvo",
+        "quantity_keys": ["HoeveelhedenBergingen", "ObjectBergingenBvo", "BergingenBvo", "ObjectBvo"],
+    },
+    {
+        "label": "Gemeenschappelijke ruimte",
+        "rate": 45.0,
+        "unit": "m2bvo",
+        "quantity_keys": ["HoeveelhedenScootmobielruimtes", "ObjectGemeenschappelijkeRuimteBvo", "GemeenschappelijkeRuimteBvo", "ObjectBvo"],
+    },
+    {
+        "label": "Appartementen",
+        "rate": 290.0,
+        "unit": "appartement",
+        "quantity_keys": ["HoeveelhedenAantalAppartementen", "AantalAppartementen", "AantalWoningen"],
+    },
+]
